@@ -1,5 +1,4 @@
-module github.com/emperorsixpacks/envsubt
-
+module github.com/emperorsixpacks/envsubst 
 go 1.23.6
 
 require (
