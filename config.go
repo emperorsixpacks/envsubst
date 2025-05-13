@@ -1,15 +1,17 @@
-package envsubt 
+package envsubt
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"strings"
 
 	"gopkg.in/yaml.v3"
 )
 
-func LoadConfig(filepath string, o *any) error {
-	ymlBytes, err := loadConfig(filepath)
+func LoadConfig(in []byte, o interface{}) error {
+	ymlBytes, err := loadConfig(in)
+	fmt.Println(ymlBytes)
 	if err != nil {
 		return err
 	}
@@ -28,12 +30,9 @@ func validMapping(in any) (map[string]any, error) {
 	return comma, nil
 }
 
-func loadConfig(filePath string) ([]byte, error) {
-	file, err := os.ReadFile(filePath)
-	if err != nil {
-		return nil, err
-	}
-	config, err := ymltoMap(file)
+func loadConfig(in []byte) ([]byte, error) {
+
+	config, err := ymltoMap(in)
 	if err != nil {
 		return nil, err
 	}
@@ -58,8 +57,8 @@ func ymltoMap(file []byte) (any, error) {
 }
 
 // TODO why don't we just pass the variable around without the pointer
-func resolveConfig(config *any) error {
-	MapConfig, err := validMapping((*config))
+func resolveConfig(config any) error {
+	MapConfig, err := validMapping(config)
 	if err != nil {
 		return err
 	}
