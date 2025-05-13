@@ -9,8 +9,8 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func LoadConfig(in []byte, o interface{}) error {
-	ymlBytes, err := loadConfig(in)
+func Unmarshal(in []byte, o interface{}) error {
+	ymlBytes, err := unmarshal(in)
 	fmt.Println(ymlBytes)
 	if err != nil {
 		return err
@@ -30,7 +30,7 @@ func validMapping(in any) (map[string]any, error) {
 	return comma, nil
 }
 
-func loadConfig(in []byte) ([]byte, error) {
+func unmarshal(in []byte) ([]byte, error) {
 
 	config, err := ymltoMap(in)
 	if err != nil {
