@@ -2,16 +2,14 @@ package envsubt
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"strings"
 
 	"gopkg.in/yaml.v3"
 )
 
-func Unmarshal(in []byte, o interface{}) error {
+func Unmarshal(in []byte, o any) error {
 	ymlBytes, err := unmarshal(in)
-	fmt.Println(ymlBytes)
 	if err != nil {
 		return err
 	}
@@ -53,12 +51,12 @@ func ymltoMap(file []byte) (any, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return config, nil
 }
 
-// TODO why don't we just pass the variable around without the pointer
-func resolveConfig(config any) error {
-	MapConfig, err := validMapping(config)
+func resolveConfig(config *any) error {
+	MapConfig, err := validMapping(*config)
 	if err != nil {
 		return err
 	}
@@ -71,11 +69,16 @@ func resolveConfig(config any) error {
 	return nil
 }
 
-// TODO accept any val of any type, currently only works with str
+// TODO accept interface{} val of interface{} type, currently only works with str
 func resolveConfigVars(config any) (any, error) {
 	MapConfig, err := validMapping(config)
 	if err != nil {
-		return nil, err
+		comma, ok := config.(any)
+		if !ok {
+			return nil, errors.New("Invalid field type")
+		}
+		return resolvePlaceHolder(comma), nil
+
 	}
 	for k, v := range MapConfig {
 		if value, ok := v.(string); ok {
@@ -89,11 +92,15 @@ func resolveConfigVars(config any) (any, error) {
 	return config, nil // MapConfig is a reference to config
 }
 
-func resolvePlaceHolder(value string) string {
-	if strings.Contains(value, "${") {
-		last_index := len(value) - 1
+func resolvePlaceHolder(value any) any {
+	strValue, ok := value.(string)
+	if !ok {
+		return value
+	}
+	if strings.Contains(strValue, "${") {
+		last_index := len(strValue) - 1
 		first_index := 2
-		env_value := value[first_index:last_index]
+		env_value := strValue[first_index:last_index]
 		return os.Getenv(env_value)
 	}
 	return value
