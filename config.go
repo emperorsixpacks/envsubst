@@ -70,7 +70,6 @@ func resolveConfig(config *any) error {
 	return nil
 }
 
-// TODO accept interface{} val of interface{} type, currently only works with str
 func resolveConfigVars(config any) (any, error) {
 	MapConfig, err := validMapping(config)
 	if err != nil {

@@ -36,7 +36,6 @@ func TestLoadConfig(t *testing.T) {
       `),
 		setupEnv: map[string]string{
 			"CLIENT_NAME": "lighthouse",
-			"PORT":        "8000",
 		},
 		expected: ClientSettings{
 			Name:    "lighthouse",
