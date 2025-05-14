@@ -50,10 +50,3 @@ network: testnet
 }
 ```
 
-## License
-
-MIT
-
-```
-
-
