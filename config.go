@@ -1,7 +1,6 @@
 package envsubt
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -75,11 +74,7 @@ func resolveConfig(config *any) error {
 func resolveConfigVars(config any) (any, error) {
 	MapConfig, err := validMapping(config)
 	if err != nil {
-		comma, ok := config.(any)
-		if !ok {
-			return nil, errors.New("Invalid field type")
-		}
-		return resolvePlaceHolder(comma), nil
+		return resolvePlaceHolder(config), nil
 
 	}
 	for k, v := range MapConfig {
