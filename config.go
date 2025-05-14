@@ -2,6 +2,7 @@ package envsubt
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"strings"
 
@@ -23,7 +24,8 @@ func Unmarshal(in []byte, o any) error {
 func validMapping(in any) (map[string]any, error) {
 	comma, ok := in.(map[string]any)
 	if !ok {
-		return nil, errors.New("Invalid config")
+		err := fmt.Sprintf("Invalid condfig: got %s", comma)
+		return nil, NewConfigError(err)
 	}
 	return comma, nil
 }
